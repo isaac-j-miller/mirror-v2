@@ -1,0 +1,20 @@
+import React from "react";
+import styled from "styled-components";
+import strftime from "strftime";
+
+const TimeDisplay = styled.div``;
+
+export const Clock: React.FC = () => {
+  const [time, setTime] = React.useState<string>();
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const formatted = strftime("%l:%M %p", now);
+      setTime(formatted);
+    }, 800);
+    return () => {
+      clearInterval(interval);
+    };
+  });
+  return <TimeDisplay>{time}</TimeDisplay>;
+};
