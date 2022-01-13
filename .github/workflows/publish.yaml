@@ -18,5 +18,8 @@ jobs:
       - name: check types
         run: npm run check-ts
 
+      - name: print env
+        run: echo $WEATHER_API_KEY
+
       - name: publish
         run: npm run publish
