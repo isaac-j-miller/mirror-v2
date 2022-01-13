@@ -18,8 +18,10 @@ jobs:
       - name: check types
         run: npm run check-ts
 
-      - name: print env
-        run: echo $WEATHER_API_KEY
+      - name: build
+        run: npm run build --production
 
       - name: publish
-        run: npm run publish
+        run: |
+          cd dist
+          aws s3 cp --recursive --acl public-read . s3://magic-mirror-v2
