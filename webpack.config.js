@@ -3,7 +3,13 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
-console.log(`API Key: ${process.env.WEATHER_API_KEY}`);
+console.log(
+  `API Key: ${
+    process.env.WEATHER_API_KEY
+      ? process.env.WEATHER_API_KEY.replace(/./g, "*")
+      : undefined
+  }`
+);
 module.exports = {
   entry: "./src/index.tsx",
   mode: process.env.NODE_ENV === "production" ? "production" : "development",
