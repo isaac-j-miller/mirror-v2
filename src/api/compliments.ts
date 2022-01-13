@@ -5,7 +5,7 @@ const genericCompliments = [
   "If I wasn't a mirror, perhaps I'd try to flirt with you.",
   "If I had a mouth, I'd try to kiss you.",
   "You are the fairest of them all.",
-  "&#191Que pasa, mamacita?",
+  "¿Que pasa, mamacita?",
   "Fuck 'em up, killer.",
   "I love your outfit!",
 ];
