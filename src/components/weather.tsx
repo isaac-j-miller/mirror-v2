@@ -12,7 +12,9 @@ const BaseDiv = styled.div`
   padding-right: 1em;
   padding-left: 1em;
   justify-content: flex-end;
-  font-size: 2em;
+  font-size: 1.5em;
+  align-items: center;
+  border: solid 0.5px #1c1c1c;
 `;
 
 const TimeDiv = styled.div``;
@@ -29,6 +31,7 @@ const LeftDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  height: 3em;
 `;
 
 export const WeatherPanel: React.FC<HourlyWeatherInfo> = (props) => {

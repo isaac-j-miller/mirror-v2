@@ -3,7 +3,7 @@ import styled from "styled-components";
 import strftime from "strftime";
 
 const TimeDisplay = styled.div`
-  font-size: 6em;
+  font-size: 5em;
   font-weight: bold;
 `;
 
