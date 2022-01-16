@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/lite-ci/schema/RuntimeConfig.json",
+  "subscriptions": [
+    {
+      "repositoryName": "mirror-v2",
+      "username": "isaac-j-miller",
+      "branchName": "main",
+      "mode": "polling",
+      "pollingIntervalSeconds": 10,
+      "onEvent": [
+        {
+          "actionType": "inline-script",
+          "inlineScript": "git pull"
+        },
+        {
+          "actionType": "inline-script",
+          "inlineScript": "npm install"
+        }
+      ]
+    }
+  ],
+  "logging": {
+    "console": {
+      "level": 1,
+      "format": "text"
+    }
+  }
+}

@@ -143,10 +143,13 @@ export class WeatherCache {
         this.lastEntry = this.cache[this.cache.length - 1].dt;
       }
     }
-    const firstRelevantIndex =
-      this.cache.findIndex(
-        (cacheValue) => cacheValue.time === strftime("%l:00 %P", now)
-      ) ?? 0;
+    let firstRelevantIndex = this.cache.findIndex(
+      (cacheValue) => cacheValue.time === strftime("%l:00 %P", now)
+    );
+    if (firstRelevantIndex < 0) {
+      this.cache = await this.makeAPICall(hours + 1);
+      firstRelevantIndex = 0;
+    }
     this.cache = this.cache.slice(firstRelevantIndex);
     return this.cache.slice(0, hours);
   }
