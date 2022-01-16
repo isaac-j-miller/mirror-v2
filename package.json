@@ -12,7 +12,7 @@
     "build": "webpack build",
     "check-ts": "tsc --noEmit",
     "publish": "npm run build --production && cd dist && aws s3 cp --recursive --acl public-read . s3://magic-mirror-v2",
-    "run-lite-ci": "npx lite-ci ./lite-ci.config.json"
+    "lite-ci": "npx lite-ci ./lite-ci.config.json"
   },
   "repository": {
     "type": "git",
