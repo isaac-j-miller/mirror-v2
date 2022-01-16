@@ -23,6 +23,11 @@
     "console": {
       "level": 1,
       "format": "text"
+    },
+    "file": {
+      "path": ".logfile",
+      "level": 2,
+      "format": "text"
     }
   }
 }
