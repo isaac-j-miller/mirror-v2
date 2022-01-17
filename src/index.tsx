@@ -36,7 +36,9 @@ try {
   });
   socket.on("reload", () => {
     console.info("reload requested");
-    location.reload();
+    setTimeout(() => {
+      location.reload();
+    }, 10000)
   });
 } catch (err) {
   console.warn("unable to connect to websocket");
