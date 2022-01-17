@@ -8,7 +8,7 @@ import { Compliment } from "./components/compliment";
 import { WeatherPanel } from "./components/weather";
 import { patchConsole } from "./monkey";
 
-const COMPLIMENT_INTERVAL = 18000; // 5 minutes
+const COMPLIMENT_INTERVAL = 300000; // 5 minutes
 const HOURS_TO_SHOW = 12;
 
 const RootContainer = styled.div`
@@ -30,9 +30,7 @@ const App: React.FC = () => {
   const [weatherForecast, setWeatherForecast] = React.useState<
     HourlyWeatherInfo[]
   >([]);
-  const [currentCompliment, setCurrentCompliment] = React.useState<string>(
-    generateCompliment()
-  );
+  const [currentCompliment, setCurrentCompliment] = React.useState<string>();
   const [gotInitialWeather, setGotInitialWeather] =
     React.useState<boolean>(false);
   const getWeather = (cb?: () => void) => {
@@ -104,6 +102,7 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    setCurrentCompliment(generateCompliment());
     const complimentInterval = setInterval(() => {
       const compliment = generateCompliment();
       setCurrentCompliment(compliment);
@@ -115,7 +114,9 @@ const App: React.FC = () => {
 
   return (
     <RootContainer>
-      <Compliment compliment={currentCompliment}></Compliment>
+      {currentCompliment && (
+        <Compliment compliment={currentCompliment}></Compliment>
+      )}
       <ForecastContainer>
         {weatherForecast &&
           weatherForecast.map((hourWeather) => (
@@ -141,31 +142,31 @@ document.head.innerHTML += `<style>
   </style>`;
 document.body.appendChild(div);
 
-try {
-  const socket = io();
-  patchConsole(socket);
-  socket.on("connect", () => {
+const socket = io();
+socket.timeout(10000).on("connect", (err?: Error) => {
+  if (err) {
+    console.warn("Websocket connect request timed out, rendering anyway");
+    reactDom.render(<App></App>, div);
+  } else {
+    patchConsole(socket);
     console.info("connected to socket");
     reactDom.render(<App></App>, div);
-  });
-  socket.on("reload", () => {
-    console.info("reload requested");
-    timeouts.push(
-      setTimeout(() => {
-        console.info("reloading");
-        timeouts.forEach((timeout) => {
-          try {
-            clearTimeout(timeout);
-          } catch (err) {
-            // noop
-          }
-        });
-        timeouts = [];
-        location.reload();
-      }, 10000)
-    );
-  });
-} catch (err) {
-  console.warn("unable to connect to websocket");
-  reactDom.render(<App></App>, div);
-}
+  }
+});
+socket.on("reload", () => {
+  console.info("reload requested");
+  timeouts.push(
+    setTimeout(() => {
+      console.info("reloading");
+      timeouts.forEach((timeout) => {
+        try {
+          clearTimeout(timeout);
+        } catch (err) {
+          // noop
+        }
+      });
+      timeouts = [];
+      location.reload();
+    }, 10000)
+  );
+});

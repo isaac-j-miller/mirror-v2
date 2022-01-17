@@ -17,10 +17,6 @@ const BaseDiv = styled.div`
   border: solid 0.5px #1c1c1c;
 `;
 
-const TimeDiv = styled.div``;
-
-const TemperatureDiv = styled.div``;
-
 const WeatherIcon = styled.img`
   height: 3em;
   width: 3em;
@@ -39,8 +35,8 @@ export const WeatherPanel: React.FC<HourlyWeatherInfo> = (props) => {
   return (
     <BaseDiv>
       <LeftDiv>
-        <TemperatureDiv>{temperature}°F</TemperatureDiv>
-        <TimeDiv>{time}</TimeDiv>
+        <div>{temperature}°F</div>
+        <div>{time}</div>
       </LeftDiv>
 
       <WeatherIcon src={`icons/${icon}.png`}></WeatherIcon>
