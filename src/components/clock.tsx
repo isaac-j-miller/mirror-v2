@@ -19,6 +19,6 @@ export const Clock: React.FC = () => {
       clearInterval(interval);
     };
   });
-  
+
   return <TimeDisplay>{time}</TimeDisplay>;
 };
