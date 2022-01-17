@@ -27,7 +27,7 @@
   "homepage": "https://github.com/isaac-j-miller/mirror-v2#readme",
   "dependencies": {
     "express": "^4.17.2",
-    "lite-ci": "^1.0.4",
+    "lite-ci": "^1.0.5",
     "socket.io": "^4.4.1"
   },
   "devDependencies": {
