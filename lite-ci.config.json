@@ -14,7 +14,7 @@
         },
         {
           "actionType": "inline-script",
-          "inlineScript": "aws s3 cp --recursive s3://magic-mirror-v2 ./dist"
+          "inlineScript": "aws s3 cp --recursive s3://magic-mirror-v2/ ./dist"
         }
       ]
     }
