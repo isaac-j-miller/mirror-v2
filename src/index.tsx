@@ -38,11 +38,12 @@ const App: React.FC = () => {
       .then((info) => {
         console.debug("setState weatherForecast");
         setWeatherForecast(info);
+        cb && cb();
       })
       .catch((err) => {
         console.error(`Error fetching weather: ${err.name} ${err.message}`);
-      })
-      .finally(cb);
+        cb && cb();
+      });
   };
   if (!gotInitialWeather) {
     console.debug("setting initial weather");
