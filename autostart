@@ -9,7 +9,6 @@ source .env
 git reset origin --hard
 git pull
 
-rm -rf ./dist || echo "unable to rm -rf dist"
 aws s3 cp --recursive s3://magic-mirror-v2/ ./dist
 npm install --production
 
