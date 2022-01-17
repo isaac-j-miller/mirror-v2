@@ -84,7 +84,7 @@ const getLatLon = once(async (): Promise<Coordinates> => {
         console.error(`Error getting location: ${error}`);
         console.info("getting location from ipapi...");
         axios
-          .get<Coordinates>("https://ipapi/json", {
+          .get<Coordinates>("https://ipapi.co/json", {
             withCredentials: false,
           })
           .then(
