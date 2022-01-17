@@ -30,7 +30,7 @@
       "format": "text"
     },
     "file": {
-      "path": ".logfile",
+      "path": "/tmp/mirror-logfile",
       "level": 2,
       "format": "text"
     }
