@@ -10,7 +10,7 @@ git reset origin --hard
 git pull
 
 aws s3 cp --recursive s3://magic-mirror-v2/ ./dist
-npm install
+npm install --production
 
 npm run serve &
 npm run lite-ci &
