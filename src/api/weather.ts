@@ -101,13 +101,13 @@ function hourlyEntryToHourlyWeatherInfo(entry: HourlyEntry): HourlyWeatherInfo {
 export async function getDailyWeatherInfo(
   hoursToShow: number
 ): Promise<HourlyWeatherInfo[]> {
+  console.info(`Attempting to fetch weather...`);
+  const { latitude, longitude } = await getLatLon();
+  const query = `?lat=${latitude.toFixed(8)}&lon=${longitude.toFixed(
+    8
+  )}&units=imperial&lang=en&appid=${API_KEY}&exclude=current,minutely,daily`;
+  const url = encodeURI(`${baseUrl}${query}`);
   try {
-    console.info(`Attempting to fetch weather`);
-    const { latitude, longitude } = await getLatLon();
-    const query = `?lat=${latitude.toFixed(8)}&lon=${longitude.toFixed(
-      8
-    )}&units=imperial&lang=en&appid=${API_KEY}&exclude=current,minutely,daily`;
-    const url = encodeURI(`${baseUrl}${query}`);
     const resp = await axios.get<WeatherApiResponse>(url, {
       withCredentials: false,
     });
@@ -117,7 +117,9 @@ export async function getDailyWeatherInfo(
       .map(hourlyEntryToHourlyWeatherInfo);
     return hourlyWeatherInfo;
   } catch (err) {
-    console.error(`Error getting weather info: ${err}`);
-    return [];
+    console.error(
+      `Error getting weather: ${(err as Error).name} ${(err as Error).message}`
+    );
+    throw err;
   }
 }

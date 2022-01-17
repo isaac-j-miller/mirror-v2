@@ -38,9 +38,12 @@ const App: React.FC = () => {
   const getWeather = (cb?: () => void) => {
     getDailyWeatherInfo(HOURS_TO_SHOW)
       .then((info) => {
+        console.debug("setState weatherForecast");
         setWeatherForecast(info);
       })
-      .catch(console.error)
+      .catch((err) => {
+        console.error(`Error fetching weather: ${err.name} ${err.message}`);
+      })
       .finally(cb);
   };
   if (!gotInitialWeather) {

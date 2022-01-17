@@ -63,5 +63,6 @@ export function generateCompliment(): string {
     activeList = eveningCompliments;
   }
   const index = Math.floor(Math.random() * activeList.length);
+  console.info(`Generating compliment at ${new Date().toTimeString()}`);
   return activeList[index];
 }
