@@ -142,6 +142,8 @@ export class WeatherCache {
       if (this.cache.length > 0) {
         this.lastEntry = this.cache[this.cache.length - 1].dt;
       }
+    } else {
+      console.info("API call shouldn't be necessary");
     }
     let firstRelevantIndex = this.cache.findIndex(
       (cacheValue) => cacheValue.time === strftime("%l:00 %P", now)
@@ -149,6 +151,8 @@ export class WeatherCache {
     if (firstRelevantIndex < 0) {
       this.cache = await this.makeAPICall(hours + 1);
       firstRelevantIndex = 0;
+    } else {
+      console.info("cache contains sufficient data");
     }
     this.cache = this.cache.slice(firstRelevantIndex);
     return this.cache.slice(0, hours);
