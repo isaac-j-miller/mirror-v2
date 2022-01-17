@@ -26,33 +26,6 @@ const ForecastContainer = styled.div`
   overflow: hidden;
 `;
 
-let timeouts: NodeJS.Timeout[] = [];
-try {
-  const socket = io();
-  socket.on("connect", () => {
-    console.info("connected to socket");
-    patchConsole(socket);
-  });
-  socket.on("reload", () => {
-    console.info("reload requested");
-    timeouts.push(
-      setTimeout(() => {
-        console.info("reloading");
-        timeouts.forEach((timeout) => {
-          try {
-            clearTimeout(timeout);
-          } catch (err) {
-            // noop
-          }
-        });
-        timeouts = [];
-        location.reload();
-      }, 10000)
-    );
-  });
-} catch (err) {
-  console.warn("unable to connect to websocket");
-}
 const App: React.FC = () => {
   const [weatherForecast, setWeatherForecast] = React.useState<
     HourlyWeatherInfo[]
@@ -152,13 +125,44 @@ const App: React.FC = () => {
     </RootContainer>
   );
 };
+
+let timeouts: NodeJS.Timeout[] = [];
+
 const div = document.createElement("div");
 document.head.innerHTML += `<style>
-html {
-  color: white; 
-  background-color: black; 
-  font-family: helvetica;
-}
-</style>`;
+  html {
+    color: white; 
+    background-color: black; 
+    font-family: helvetica;
+  }
+  </style>`;
 document.body.appendChild(div);
-reactDom.render(<App></App>, div);
+
+try {
+  const socket = io();
+  patchConsole(socket);
+  socket.on("connect", () => {
+    console.info("connected to socket");
+    reactDom.render(<App></App>, div);
+  });
+  socket.on("reload", () => {
+    console.info("reload requested");
+    timeouts.push(
+      setTimeout(() => {
+        console.info("reloading");
+        timeouts.forEach((timeout) => {
+          try {
+            clearTimeout(timeout);
+          } catch (err) {
+            // noop
+          }
+        });
+        timeouts = [];
+        location.reload();
+      }, 10000)
+    );
+  });
+} catch (err) {
+  console.warn("unable to connect to websocket");
+  reactDom.render(<App></App>, div);
+}
