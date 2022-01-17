@@ -75,35 +75,17 @@ const once = <T>(fn: () => T): (() => T) => {
 };
 
 const getLatLon = once(async (): Promise<Coordinates> => {
-  const promise = new Promise<Coordinates>((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        resolve(position.coords);
-      },
-      (error) => {
-        console.error(`Error getting location: ${error}`);
-        console.info("getting location from ipapi...");
-        axios
-          .get<Coordinates>("https://ipapi.co/json", {
-            withCredentials: false,
-          })
-          .then(
-            (resp) => {
-              const { latitude, longitude } = resp.data;
-              resolve({
-                latitude,
-                longitude,
-              });
-            },
-            (err) => {
-              console.error(`Error getting IP info: ${err}`);
-              reject(err);
-            }
-          );
-      }
-    );
-  });
-  return promise;
+  console.info("getting location from ipapi...");
+  try {
+    const resp = await axios.get<Coordinates>("https://ipapi.co/json", {
+      withCredentials: false,
+    });
+    const { latitude, longitude } = resp.data;
+    return { latitude, longitude };
+  } catch (err) {
+    console.error(`Error getting IP info: ${err}`);
+    throw err;
+  }
 });
 
 function hourlyEntryToHourlyWeatherInfo(entry: HourlyEntry): HourlyWeatherInfo {
