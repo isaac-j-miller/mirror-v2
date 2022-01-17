@@ -6,8 +6,8 @@ import { getDailyWeatherInfo, HourlyWeatherInfo } from "./api/weather";
 import { generateCompliment } from "./api/compliments";
 import { Compliment } from "./components/compliment";
 import { WeatherPanel } from "./components/weather";
+import { patchConsole } from "./monkey";
 
-const WEATHER_INTERVAL = 900000; // 15 minutes
 const COMPLIMENT_INTERVAL = 18000; // 5 minutes
 const HOURS_TO_SHOW = 12;
 
@@ -28,12 +28,10 @@ const ForecastContainer = styled.div`
 
 let timeouts: NodeJS.Timeout[] = [];
 try {
-  const socket = io({
-    host: "localhost",
-    port: 3000,
-  });
+  const socket = io();
   socket.on("connect", () => {
     console.info("connected to socket");
+    patchConsole(socket);
   });
   socket.on("reload", () => {
     console.info("reload requested");
@@ -64,30 +62,62 @@ const App: React.FC = () => {
   );
   const [gotInitialWeather, setGotInitialWeather] =
     React.useState<boolean>(false);
-
-  if (!gotInitialWeather) {
-    setGotInitialWeather(true);
+  const getWeather = (cb?: () => void) => {
     getDailyWeatherInfo(HOURS_TO_SHOW)
       .then((info) => {
         setWeatherForecast(info);
       })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(cb);
+  };
+  if (!gotInitialWeather) {
+    setGotInitialWeather(true);
+    getWeather();
   }
   useEffect(() => {
-    const interval = setInterval(() => {
-      getDailyWeatherInfo(HOURS_TO_SHOW)
-        .then((info) => {
-          setWeatherForecast(info);
-        })
-        .catch(console.error);
-    }, WEATHER_INTERVAL);
+    const time = new Date();
+    const thisHour = time.getHours();
+    const nextHour = new Date(
+      time.getFullYear(),
+      time.getMonth(),
+      time.getDate(),
+      thisHour + 1,
+      0,
+      1,
+      0
+    );
+
+    const diff = nextHour.valueOf() - time.valueOf();
+    const intervals: NodeJS.Timer[] = [];
+    const intervalMs = 1000 * 3600;
+    const timeout = setTimeout(() => {
+      getWeather(() =>
+        console.info(
+          `Set timeout to query weather ${
+            diff / (1000 * 60)
+          } minutes from now (${nextHour.toTimeString()})`
+        )
+      );
+      const interval = setInterval(() => {
+        getWeather(() =>
+          console.info(
+            `Will query weather again at ${new Date(
+              new Date().valueOf() + intervalMs
+            ).toTimeString()}`
+          )
+        );
+      }, intervalMs);
+      intervals.push(interval);
+    }, diff);
+
     const complimentInterval = setInterval(() => {
       const compliment = generateCompliment();
       setCurrentCompliment(compliment);
     }, COMPLIMENT_INTERVAL);
     return () => {
-      clearInterval(interval);
+      intervals.forEach(clearInterval);
       clearInterval(complimentInterval);
+      clearTimeout(timeout);
     };
   });
   return (

@@ -52,7 +52,14 @@ socketServer.on("connection", (socket) => {
       })
       .catch(console.error);
   }, 1000);
-
+  socket.on("log", ({ level, args }) => {
+    const fmt = `[WEB] ${level.toUpperCase()}`;
+    if (["debug", "info", "warn", "error", "log"].includes(level)) {
+      console[level](fmt, ...args);
+    } else {
+      console.log(fmt, ...args);
+    }
+  });
   socket.on("disconnect", function () {
     console.log("disconnected");
     clearInterval(interval);

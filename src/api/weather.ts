@@ -98,75 +98,26 @@ function hourlyEntryToHourlyWeatherInfo(entry: HourlyEntry): HourlyWeatherInfo {
   };
 }
 
-export class WeatherCache {
-  private cache: HourlyWeatherInfo[];
-  private lastEntry: number;
-  static instance: WeatherCache;
-  private constructor(private apiKey: string | undefined) {
-    this.cache = [];
-    if (!apiKey) {
-      throw new Error("API_KEY is required");
-    }
-    this.lastEntry = 0;
-  }
-  static getInstance() {
-    if (!WeatherCache.instance) {
-      WeatherCache.instance = new WeatherCache(API_KEY);
-    }
-    return WeatherCache.instance;
-  }
-  async getHourlyWeatherInfo(hours: number) {
-    const now = new Date();
-    const epochTime = now.valueOf();
-    const nHoursFromNow = epochTime + hours * 1000 * 3600;
-    if (this.lastEntry < nHoursFromNow) {
-      this.cache = await this.makeAPICall(hours + 1);
-      if (this.cache.length > 0) {
-        this.lastEntry = this.cache[this.cache.length - 1].dt;
-      }
-    } else {
-      console.info("API call shouldn't be necessary");
-    }
-    let firstRelevantIndex = this.cache.findIndex(
-      (cacheValue) => cacheValue.time === strftime("%l:00 %P", now)
-    );
-    if (firstRelevantIndex < 0) {
-      this.cache = await this.makeAPICall(hours + 1);
-      firstRelevantIndex = 0;
-    } else {
-      console.info("cache contains sufficient data");
-    }
-    this.cache = this.cache.slice(firstRelevantIndex);
-    return this.cache.slice(0, hours);
-  }
-  private async makeAPICall(hoursToShow: number) {
-    try {
-      console.info(`Attempting to fetch weather`);
-      const { latitude, longitude } = await getLatLon();
-      const query = `?lat=${latitude.toFixed(8)}&lon=${longitude.toFixed(
-        8
-      )}&units=imperial&lang=en&appid=${
-        this.apiKey
-      }&exclude=current,minutely,daily`;
-      const url = encodeURI(`${baseUrl}${query}`);
-      const resp = await axios.get<WeatherApiResponse>(url, {
-        withCredentials: false,
-      });
-      console.info(`Got response from weather API`);
-      const hourlyWeatherInfo = resp.data.hourly
-        .slice(0, hoursToShow)
-        .map(hourlyEntryToHourlyWeatherInfo);
-      return hourlyWeatherInfo;
-    } catch (err) {
-      console.error(`Error getting weather info: ${err}`);
-      return [];
-    }
-  }
-}
-
-const instance = WeatherCache.getInstance();
 export async function getDailyWeatherInfo(
   hoursToShow: number
 ): Promise<HourlyWeatherInfo[]> {
-  return instance.getHourlyWeatherInfo(hoursToShow);
+  try {
+    console.info(`Attempting to fetch weather`);
+    const { latitude, longitude } = await getLatLon();
+    const query = `?lat=${latitude.toFixed(8)}&lon=${longitude.toFixed(
+      8
+    )}&units=imperial&lang=en&appid=${API_KEY}&exclude=current,minutely,daily`;
+    const url = encodeURI(`${baseUrl}${query}`);
+    const resp = await axios.get<WeatherApiResponse>(url, {
+      withCredentials: false,
+    });
+    console.info(`Got response from weather API`);
+    const hourlyWeatherInfo = resp.data.hourly
+      .slice(0, hoursToShow)
+      .map(hourlyEntryToHourlyWeatherInfo);
+    return hourlyWeatherInfo;
+  } catch (err) {
+    console.error(`Error getting weather info: ${err}`);
+    return [];
+  }
 }
