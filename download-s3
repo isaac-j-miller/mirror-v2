@@ -1,0 +1,13 @@
+#!/bin/bash
+set -euo pipefail
+
+printf "%s" "waiting for commitId change"
+rm -rf .tmp || echo "no .tmp"
+mkdir -p .tmp
+
+while ! aws s3 cp s3://mirror-v2/.commit ./.tmp/.commit && diff -q ./.tmp/.commit ./dist/.commit
+do
+    sleep 1
+    printf "%c" "."
+done
+printf "\n%s\n"  "Found new commit id"

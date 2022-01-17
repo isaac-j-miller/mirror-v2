@@ -9,7 +9,7 @@
     "prettier": "prettier --write .",
     "prettier-check": "prettier --check .",
     "start": "webpack serve",
-    "build": "webpack build",
+    "build": "webpack build && echo $(git rev-parse HEAD) > ./dist/.commit",
     "check-ts": "tsc --noEmit",
     "publish": "npm run build --production && cd dist && aws s3 cp --recursive --acl public-read . s3://magic-mirror-v2",
     "lite-ci": "npx lite-ci ./lite-ci.config.json",
