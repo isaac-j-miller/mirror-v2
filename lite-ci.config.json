@@ -11,6 +11,10 @@
       "onEvent": [
         {
           "actionType": "inline-script",
+          "inlineScript": "git reset hard --origin"
+        },
+        {
+          "actionType": "inline-script",
           "inlineScript": "git pull"
         },
         {
