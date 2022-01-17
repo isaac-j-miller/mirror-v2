@@ -29,7 +29,7 @@ module.exports = {
   },
   output: {
     chunkFilename: "[id].js",
-
+    filename: "[hash].js",
     path: path.resolve(__dirname, "dist"),
   },
   devServer: {
