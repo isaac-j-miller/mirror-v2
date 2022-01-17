@@ -14,7 +14,7 @@
         },
         {
           "actionType": "inline-script",
-          "inlineScript": "npm install"
+          "inlineScript": "aws s3 cp --recursive s3://magic-mirror-v2 ./dist"
         }
       ]
     }

@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import reactDom from "react-dom";
 import styled from "styled-components";
+import { io } from "socket.io-client";
 import { getDailyWeatherInfo, HourlyWeatherInfo } from "./api/weather";
 import { generateCompliment } from "./api/compliments";
 import { Compliment } from "./components/compliment";
 import { WeatherPanel } from "./components/weather";
 
-const WEATHER_INTERVAL = 1000 * 60 * 15; // 15 minutes
-const COMPLIMENT_INTERVAL = 1000 * 60 * 5; // 5 minutes
+const WEATHER_INTERVAL = 900000; // 15 minutes
+const COMPLIMENT_INTERVAL = 18000; // 5 minutes
 const HOURS_TO_SHOW = 12;
 
 const RootContainer = styled.div`
@@ -25,6 +26,21 @@ const ForecastContainer = styled.div`
   overflow: hidden;
 `;
 
+try {
+  const socket = io({
+    host: "localhost",
+    port: 3000,
+  });
+  socket.on("connect", () => {
+    console.info("connected to socket");
+  });
+  socket.on("reload", () => {
+    console.info("reload requested");
+    location.reload();
+  });
+} catch (err) {
+  console.warn("unable to connect to websocket");
+}
 const App: React.FC = () => {
   const [weatherForecast, setWeatherForecast] = React.useState<
     HourlyWeatherInfo[]
