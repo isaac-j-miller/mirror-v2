@@ -6,6 +6,7 @@
       "username": "isaac-j-miller",
       "branchName": "main",
       "mode": "polling",
+      "personalAccessTokenEnvVar": "GITHUB_PAT",
       "pollingIntervalSeconds": 10,
       "onEvent": [
         {

@@ -1,9 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-printf "%s" "waiting for server"
-while ! nc -vz localhost 3000 &> /dev/null && sleep 1
+host="${1}"
+port="${2:-443}"
+printf "%s" "waiting for $host:$port"
+while ! nc -vz "${host}" "${port}" &> /dev/null && sleep 1
 do
     printf "%c" "."
 done
-printf "\n%s\n"  "Server is online"
+printf "\n%s\n"  "$host:$port is online"
