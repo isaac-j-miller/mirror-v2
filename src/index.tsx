@@ -37,6 +37,7 @@ try {
   socket.on("reload", () => {
     console.info("reload requested");
     setTimeout(() => {
+      console.info("reloading");
       location.reload();
     }, 10000);
   });
