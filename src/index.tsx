@@ -26,6 +26,7 @@ const ForecastContainer = styled.div`
   overflow: hidden;
 `;
 
+let timeouts: NodeJS.Timeout[] = [];
 try {
   const socket = io({
     host: "localhost",
@@ -36,10 +37,20 @@ try {
   });
   socket.on("reload", () => {
     console.info("reload requested");
-    setTimeout(() => {
-      console.info("reloading");
-      location.reload();
-    }, 10000);
+    timeouts.push(
+      setTimeout(() => {
+        console.info("reloading");
+        timeouts.forEach((timeout) => {
+          try {
+            clearTimeout(timeout);
+          } catch (err) {
+            // noop
+          }
+        });
+        timeouts = [];
+        location.reload();
+      }, 10000)
+    );
   });
 } catch (err) {
   console.warn("unable to connect to websocket");

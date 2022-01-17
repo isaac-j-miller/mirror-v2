@@ -66,14 +66,15 @@ type WeatherIcon =
   | "50d"
   | "50n";
 
-type IpInfoResp = {
-  loc: `${number},${number}`;
-};
-
 const API_KEY = process.env.WEATHER_API_KEY;
 const baseUrl = "https://api.openweathermap.org/data/2.5/onecall";
 
-async function getLatLon(): Promise<Coordinates> {
+const once = <T>(fn: () => T): (() => T) => {
+  const res = fn();
+  return () => res;
+};
+
+const getLatLon = once(async (): Promise<Coordinates> => {
   const promise = new Promise<Coordinates>((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -81,15 +82,14 @@ async function getLatLon(): Promise<Coordinates> {
       },
       (error) => {
         console.error(`Error getting location: ${error}`);
+        console.info("getting location from ipapi...");
         axios
-          .get<IpInfoResp>("https://ipinfo.io/json", {
+          .get<Coordinates>("https://ipapi/json", {
             withCredentials: false,
           })
           .then(
             (resp) => {
-              const [latitude, longitude] = resp.data.loc
-                .split(",")
-                .map(Number);
+              const { latitude, longitude } = resp.data;
               resolve({
                 latitude,
                 longitude,
@@ -104,7 +104,7 @@ async function getLatLon(): Promise<Coordinates> {
     );
   });
   return promise;
-}
+});
 
 function hourlyEntryToHourlyWeatherInfo(entry: HourlyEntry): HourlyWeatherInfo {
   const date = new Date(entry.dt * 1000);
