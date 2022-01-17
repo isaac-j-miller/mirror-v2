@@ -71,6 +71,7 @@ const App: React.FC = () => {
       .finally(cb);
   };
   if (!gotInitialWeather) {
+    console.debug("setting initial weather");
     setGotInitialWeather(true);
     getWeather();
   }
@@ -86,16 +87,20 @@ const App: React.FC = () => {
       1,
       0
     );
-
     const diff = nextHour.valueOf() - time.valueOf();
     const intervals: NodeJS.Timer[] = [];
     const intervalMs = 1000 * 3600;
+    console.info(
+      `Set timeout to query weather ${
+        diff / (1000 * 60)
+      } minutes from now (${nextHour.toTimeString()})`
+    );
     const timeout = setTimeout(() => {
       getWeather(() =>
         console.info(
-          `Set timeout to query weather ${
-            diff / (1000 * 60)
-          } minutes from now (${nextHour.toTimeString()})`
+          `Will query weather again at ${new Date(
+            new Date().valueOf() + intervalMs
+          ).toTimeString()}`
         )
       );
       const interval = setInterval(() => {
@@ -107,19 +112,31 @@ const App: React.FC = () => {
           )
         );
       }, intervalMs);
+      intervals.pop();
       intervals.push(interval);
     }, diff);
 
+    return () => {
+      console.info("clearing timeouts/intervals");
+      try {
+        clearTimeout(timeout);
+      } catch (err) {
+        // noop
+      }
+      intervals.forEach(clearInterval);
+    };
+  }, []);
+
+  useEffect(() => {
     const complimentInterval = setInterval(() => {
       const compliment = generateCompliment();
       setCurrentCompliment(compliment);
     }, COMPLIMENT_INTERVAL);
     return () => {
-      intervals.forEach(clearInterval);
       clearInterval(complimentInterval);
-      clearTimeout(timeout);
     };
-  });
+  }, []);
+
   return (
     <RootContainer>
       <Compliment compliment={currentCompliment}></Compliment>
