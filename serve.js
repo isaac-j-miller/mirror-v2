@@ -11,6 +11,26 @@ const app = express();
 
 const server = http.Server(app);
 
+const getLevel = (level) =>
+  ["debug", "info", "warn", "error", "log"].includes(level) ? level : "log";
+
+const originalConsole = { ...console };
+const log = (level, args) => {
+  const useLevel = getLevel(level);
+  originalConsole[useLevel](
+    `[${level.toUpperCase()}]\t${new Date().toISOString()}\t[server]\t`,
+    ...args
+  );
+};
+
+console = {
+  log: (...args) => log("log", args),
+  debug: (...args) => log("debug", args),
+  info: (...args) => log("info", args),
+  warn: (...args) => log("warn", args),
+  error: (...args) => log("error", args),
+};
+
 const distFolderPath = path.resolve("dist");
 app.get("/", function (req, res) {
   res.sendFile(path.join(distFolderPath, "index.html"));
@@ -26,8 +46,7 @@ app.get("/:fpath(*)", (req, res) => {
   } else {
     res.sendFile(filepath);
   }
-
-  console.log(`[${res.statusCode}] GET ${fpath}`);
+  console.log(`GET ${fpath} (${res.statusCode})`);
 });
 
 const socketServer = new io.Server(server);
@@ -38,34 +57,32 @@ const getDistHash = async () => {
   return resp.stdout;
 };
 socketServer.on("connection", (socket) => {
-  console.log("connection established");
+  console.debug("connection established");
   // start monitoring build folder
   let distHash = undefined;
   const interval = setInterval(() => {
     getDistHash()
       .then((hash) => {
         if (distHash !== undefined && distHash !== hash) {
-          console.log("change detected; requesting reload");
+          console.debug(`change detected; requesting reload`);
           socket.emit("reload");
         }
         distHash = hash;
       })
       .catch(console.error);
   }, 1000);
-  socket.on("log", ({ level, args }) => {
-    const fmt = `[WEB] ${level.toUpperCase()}`;
-    if (["debug", "info", "warn", "error", "log"].includes(level)) {
-      console[level](fmt, ...args);
-    } else {
-      console.log(fmt, ...args);
-    }
+  socket.on("log", ({ level, args, time }) => {
+    const ts = new Date(time).toISOString();
+    const fmt = `[${level.toUpperCase()}]\t${ts}\t[web]\t`;
+    const useLevel = getLevel(level);
+    originalConsole[useLevel](fmt, ...args);
   });
   socket.on("disconnect", function () {
-    console.log("disconnected");
+    console.debug("disconnected");
     clearInterval(interval);
   });
 });
 
 server.listen(3000, () => {
-  console.log("listening at http://localhost:3000");
+  console.info("listening at http://localhost:3000");
 });

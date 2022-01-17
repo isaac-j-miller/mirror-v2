@@ -66,16 +66,16 @@ const App: React.FC = () => {
     const intervals: NodeJS.Timer[] = [];
     const intervalMs = 1000 * 3600;
     console.info(
-      `Set timeout to query weather ${
-        diff / (1000 * 60)
-      } minutes from now (${nextHour.toTimeString()})`
+      `Set timeout to query weather ${(diff / (1000 * 60)).toPrecision(
+        3
+      )} minutes from now (${nextHour.toISOString()})`
     );
     const timeout = setTimeout(() => {
       getWeather(() =>
         console.info(
           `Will query weather again at ${new Date(
             new Date().valueOf() + intervalMs
-          ).toTimeString()}`
+          ).toISOString()}`
         )
       );
       const interval = setInterval(() => {
@@ -83,7 +83,7 @@ const App: React.FC = () => {
           console.info(
             `Will query weather again at ${new Date(
               new Date().valueOf() + intervalMs
-            ).toTimeString()}`
+            ).toISOString()}`
           )
         );
       }, intervalMs);
@@ -147,12 +147,11 @@ const socket = io();
 socket.timeout(10000).on("connect", (err?: Error) => {
   if (err) {
     console.warn("Websocket connect request timed out, rendering anyway");
-    reactDom.render(<App></App>, div);
   } else {
     patchConsole(socket);
     console.info("connected to socket");
-    reactDom.render(<App></App>, div);
   }
+  reactDom.render(<App></App>, div);
 });
 socket.on("reload", () => {
   console.info("reload requested");
