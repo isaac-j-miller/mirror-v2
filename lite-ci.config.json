@@ -13,6 +13,10 @@
           "inlineScript": "git pull"
         },
         {
+          "actionType": "file-script",
+          "scriptFilePath": "wait-for-commit"
+        },
+        {
           "actionType": "inline-script",
           "inlineScript": "aws s3 cp --recursive s3://magic-mirror-v2/ ./dist"
         }
