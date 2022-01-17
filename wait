@@ -1,0 +1,9 @@
+#!/bin/bash
+set -euo pipefail
+
+printf "%s" "waiting for server ..."
+while ! nc -vz localhost 3000 &> /dev/null && sleep 1
+do
+    printf "%c" "."
+done
+printf "\n%s\n"  "Server is online"
