@@ -50,7 +50,7 @@ app.get("/:fpath(*)", (req, res) => {
 });
 
 const socketServer = new io.Server(server, {
-  path: "socket.io"
+  path: "socket.io",
 });
 const getDistHash = async () => {
   const resp = await asyncExec(

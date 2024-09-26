@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styled from "styled-components"
+import styled from "styled-components";
 import { getDailyWeatherInfo, HourlyWeatherInfo } from "./api/weather";
 import { generateCompliment } from "./api/compliments";
 import { Compliment } from "./components/compliment";
@@ -23,7 +23,7 @@ const ForecastContainer = styled.div`
   overflow: hidden;
 `;
 
-import './App.css'
+import "./App.css";
 
 const App: React.FC = () => {
   const [weatherForecast, setWeatherForecast] = React.useState<
@@ -37,14 +37,14 @@ const App: React.FC = () => {
       .then((info) => {
         console.debug("setState weatherForecast");
         setWeatherForecast(info);
-        if(cb) {
-          cb()
+        if (cb) {
+          cb();
         }
       })
       .catch((err) => {
         console.error(`Error fetching weather: ${err.name} ${err.message}`);
-        if(cb) {
-          cb()
+        if (cb) {
+          cb();
         }
       });
   };
@@ -100,8 +100,9 @@ const App: React.FC = () => {
         clearTimeout(timeout);
       } catch (err) {
         // noop
+        console.debug(err);
       }
-      intervals.forEach(x => clearInterval(x));
+      intervals.forEach((x) => clearInterval(x));
     };
   }, []);
 
@@ -134,4 +135,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App
+export default App;
