@@ -1,12 +1,9 @@
 import React, { useEffect } from "react";
-import reactDom from "react-dom";
-import styled from "styled-components";
-import { io } from "socket.io-client";
+import styled from "styled-components"
 import { getDailyWeatherInfo, HourlyWeatherInfo } from "./api/weather";
 import { generateCompliment } from "./api/compliments";
 import { Compliment } from "./components/compliment";
 import { WeatherPanel } from "./components/weather";
-import { patchConsole } from "./monkey";
 
 const COMPLIMENT_INTERVAL = 300000; // 5 minutes
 const HOURS_TO_SHOW = 12;
@@ -26,6 +23,8 @@ const ForecastContainer = styled.div`
   overflow: hidden;
 `;
 
+import './App.css'
+
 const App: React.FC = () => {
   const [weatherForecast, setWeatherForecast] = React.useState<
     HourlyWeatherInfo[]
@@ -38,11 +37,15 @@ const App: React.FC = () => {
       .then((info) => {
         console.debug("setState weatherForecast");
         setWeatherForecast(info);
-        cb && cb();
+        if(cb) {
+          cb()
+        }
       })
       .catch((err) => {
         console.error(`Error fetching weather: ${err.name} ${err.message}`);
-        cb && cb();
+        if(cb) {
+          cb()
+        }
       });
   };
   if (!gotInitialWeather) {
@@ -63,7 +66,7 @@ const App: React.FC = () => {
       0
     );
     const diff = nextHour.valueOf() - time.valueOf();
-    const intervals: NodeJS.Timer[] = [];
+    const intervals: NodeJS.Timeout[] = [];
     const intervalMs = 1000 * 3600;
     console.info(
       `Set timeout to query weather ${(diff / (1000 * 60)).toPrecision(
@@ -98,7 +101,7 @@ const App: React.FC = () => {
       } catch (err) {
         // noop
       }
-      intervals.forEach(clearInterval);
+      intervals.forEach(x => clearInterval(x));
     };
   }, []);
 
@@ -131,42 +134,4 @@ const App: React.FC = () => {
   );
 };
 
-let timeouts: NodeJS.Timeout[] = [];
-
-const div = document.createElement("div");
-document.head.innerHTML += `<style>
-  html {
-    color: white; 
-    background-color: black; 
-    font-family: helvetica;
-  }
-  </style>`;
-document.body.appendChild(div);
-
-const socket = io();
-socket.timeout(10000).on("connect", (err?: Error) => {
-  if (err) {
-    console.warn("Websocket connect request timed out, rendering anyway");
-  } else {
-    patchConsole(socket);
-    console.info("connected to socket");
-  }
-  reactDom.render(<App></App>, div);
-});
-socket.on("reload", () => {
-  console.info("reload requested");
-  timeouts.push(
-    setTimeout(() => {
-      console.info("reloading");
-      timeouts.forEach((timeout) => {
-        try {
-          clearTimeout(timeout);
-        } catch (err) {
-          // noop
-        }
-      });
-      timeouts = [];
-      location.reload();
-    }, 10000)
-  );
-});
+export default App

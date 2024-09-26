@@ -49,7 +49,9 @@ app.get("/:fpath(*)", (req, res) => {
   console.log(`GET ${fpath} (${res.statusCode})`);
 });
 
-const socketServer = new io.Server(server);
+const socketServer = new io.Server(server, {
+  path: "socket.io"
+});
 const getDistHash = async () => {
   const resp = await asyncExec(
     `find ${distFolderPath} -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum`

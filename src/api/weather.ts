@@ -67,7 +67,7 @@ type WeatherIcon =
   | "50n";
 
 const API_KEY = process.env.WEATHER_API_KEY;
-const baseUrl = "https://api.openweathermap.org/data/2.5/onecall";
+const baseUrl = "https://api.openweathermap.org/data/3.0/onecall";
 
 const once = <T>(fn: () => T): (() => T) => {
   let res: T | undefined;
