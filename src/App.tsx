@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { getDailyWeatherInfo, HourlyWeatherInfo } from "./api/weather";
+import { getDailyWeatherInfo, WeatherData } from "./api/weather";
 import { generateCompliment } from "./api/compliments";
 import { Compliment } from "./components/compliment";
-import { WeatherPanel } from "./components/weather";
+import { DailyWeatherPanels, WeatherPanel } from "./components/weather";
+import "./App.css";
 
 const COMPLIMENT_INTERVAL = 300000; // 5 minutes
 const HOURS_TO_SHOW = 12;
+const DAYS_TO_SHOW = 5;
 
 const RootContainer = styled.div`
   width: 100%;
@@ -23,17 +25,23 @@ const ForecastContainer = styled.div`
   overflow: hidden;
 `;
 
-import "./App.css";
+const LeftContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  height: 100%;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+`;
 
 const App: React.FC = () => {
-  const [weatherForecast, setWeatherForecast] = React.useState<
-    HourlyWeatherInfo[]
-  >([]);
+  const [weatherForecast, setWeatherForecast] = React.useState<WeatherData>();
   const [currentCompliment, setCurrentCompliment] = React.useState<string>();
   const [gotInitialWeather, setGotInitialWeather] =
     React.useState<boolean>(false);
   const getWeather = (cb?: () => void) => {
-    getDailyWeatherInfo(HOURS_TO_SHOW)
+    getDailyWeatherInfo(HOURS_TO_SHOW, DAYS_TO_SHOW)
       .then((info) => {
         console.debug("setState weatherForecast");
         setWeatherForecast(info);
@@ -119,12 +127,18 @@ const App: React.FC = () => {
 
   return (
     <RootContainer>
-      {currentCompliment && (
-        <Compliment compliment={currentCompliment}></Compliment>
-      )}
+      <LeftContainer>
+        {currentCompliment && (
+          <Compliment compliment={currentCompliment}></Compliment>
+        )}
+        {weatherForecast?.daily && (
+          <DailyWeatherPanels info={weatherForecast.daily} />
+        )}
+      </LeftContainer>
+
       <ForecastContainer>
-        {weatherForecast &&
-          weatherForecast.map((hourWeather) => (
+        {weatherForecast?.hourly &&
+          weatherForecast.hourly.map((hourWeather) => (
             <WeatherPanel
               key={hourWeather.time}
               {...hourWeather}

@@ -3,7 +3,10 @@ import styled from "styled-components";
 import { Clock } from "./clock";
 
 const BaseComplimentDiv = styled.div`
-  width: 50%;
+  display: flex;
+  flex-direction: column;
+  height: 12em;
+  margin-left: 1em;
 `;
 
 const ComplimentDisplay = styled.div`
