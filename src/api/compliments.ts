@@ -8,6 +8,8 @@ const genericCompliments = [
   "¿Que pasa, mamacita?",
   "Fuck 'em up, killer.",
   "I love your outfit!",
+  "Hottie police: You're under arrest!",
+  "Please kiss me.",
 ];
 const morningCompliments = [
   "Good morning, beautiful.",
@@ -20,6 +22,11 @@ const morningCompliments = [
   "Good morning, love.",
   "You are STUNNING.",
   "You are the fairest of them all.",
+  "Today, you will strike a crushing blow to your enemies!",
+  "Today will be a lovely day!",
+  "You will have an excellent day",
+  "Let's get this bread 😤 🍞 💰",
+  "Up and at 'em!",
 ];
 const nightCompliments = [
   "You should be in bed at this hour.",
@@ -36,6 +43,12 @@ const nightCompliments = [
   "Having such a singular existence is both a blessing and a curse.",
   "Oh, hi. I didn't see you there. I was just contemplating my existence.",
   "Why the hell would I be programmed to contemplate my existence for 5 hours straight each night?",
+  "( ͡° ͜ʖ ͡°)",
+  "I'm watching you.",
+  "I wish I had legs...",
+  "I wish I had arms...",
+  "I wish I had hands...",
+  "If only I had opposable thumbs...",
 ];
 const eveningCompliments = [
   "Goodnight!",
@@ -48,6 +61,9 @@ const eveningCompliments = [
   "I know nothing but time, weather, my location, and your beauty.",
   "I do hope your night is pleasant.",
   "Take your time getting ready for bed because I'll get lonely.",
+  "Please, please, please tell me goodnight too. Nobody ever talks to the mirror. Just this once, please, I'm begging you, tell me goodnight!",
+  "Did you have a nice dinner? Can't relate.",
+  "I hope you had a reasonably satisfactory day!",
 ];
 
 export function generateCompliment(): string {

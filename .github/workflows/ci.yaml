@@ -14,14 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: install pnpm
+        run: npm i -g pnpm@8 --force
+
       - name: install packages
-        run: npm install
+        run: pnpm install
 
       - name: check types
-        run: npm run check-ts
+        run: pnpm run check-ts
 
       - name: check prettier
-        run: npm run prettier-check
+        run: pnpm run prettier-check
 
       - name: make sure build works
-        run: npm run build
+        run: pnpm run build
