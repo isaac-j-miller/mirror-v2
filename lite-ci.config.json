@@ -39,7 +39,7 @@
     },
     "file": {
       "path": "/tmp/mirror-logfile",
-      "level": 2,
+      "level": 3,
       "format": "text"
     }
   }
