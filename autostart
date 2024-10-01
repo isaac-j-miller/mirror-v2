@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eou pipefail
-export DISPLAY=:0
+export DISPLAY=:0.0
 xrandr --output HDMI-1 --rotate left
 xset -dpms
 xset s off
@@ -21,4 +21,4 @@ pnpm run serve &
 # pnpm run lite-ci &
 
 ./wait 127.0.0.1 3000
-xinit midori -e Fullscreen -a http://localhost:3000 
+xinit midori -i 1500 -e Fullscreen -a http://localhost:3000 
