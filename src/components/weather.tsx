@@ -35,11 +35,14 @@ const LeftDiv = styled.div`
 `;
 const DailyForecastContainer = styled.div<{ cols: number }>`
   display: grid;
-  rows: 2;
+  rows: 4;
   grid-template-columns: repeat(${(props) => props.cols + 1}, 1fr);
   flex-direction: row;
   height: auto;
   margin: 0.5em;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 `;
 
 const GridCell = styled.div`
