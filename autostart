@@ -5,6 +5,7 @@ xrandr --output HDMI-1 --rotate left
 xset -dpms
 xset s off
 xset s noblank
+unclutter &
 matchbox-window-manager -use_titlebar no -use_desktop_mode plain -use-cursor no &
 
 cd /home/pi/mirror-v2
@@ -21,4 +22,5 @@ pnpm run serve &
 pnpm run lite-ci &
 
 ./wait 127.0.0.1 3000
-midori -e Fullscreen -a http://localhost:3000 
+
+chromium-browser --kiosk --incognito --allow-insecure-localhost --disable-session-crashed-bubble --disable-infobars --enable-logging=/dev/null 127.0.0.1:3000
