@@ -6,7 +6,7 @@ xset -dpms
 xset s off
 xset s noblank
 unclutter &
-matchbox-window-manager -use_titlebar no -use_desktop_mode plain -use-cursor no &
+matchbox-window-manager -use_titlebar no -use_desktop_mode plain -use_cursor no &
 
 cd /home/pi/mirror-v2
 
