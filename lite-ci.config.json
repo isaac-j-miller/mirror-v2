@@ -10,6 +10,10 @@
       "pollingIntervalSeconds": 10,
       "onEvent": [
         {
+          "actionType": "file-script",
+          "scriptFilePath": "hash-pnpm-lock"
+        },
+        {
           "actionType": "inline-script",
           "inlineScript": "git reset --hard origin"
         },
@@ -28,6 +32,10 @@
         {
           "actionType": "inline-script",
           "inlineScript": "aws s3 cp --recursive s3://magic-mirror-v2/ ./dist"
+        },
+        {
+          "actionType": "inline-script",
+          "inlineScript": "conditionally-restart"
         }
       ]
     }

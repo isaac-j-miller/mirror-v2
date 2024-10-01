@@ -32,10 +32,16 @@ console = {
 };
 
 const distFolderPath = path.resolve("dist");
-app.get("/", function (req, res) {
+app.get("/", function (_req, res) {
   res.sendFile(path.join(distFolderPath, "index.html"));
 });
-
+app.post("/kill", function (_req, res) {
+  console.warn("Kill signal received");
+  res.status(200).send();
+  res.once("close", () => {
+    process.exit(0);
+  });
+});
 app.get("/:fpath(*)", (req, res) => {
   const { fpath } = req.params;
   const filepath = path.join(distFolderPath, fpath);
@@ -50,7 +56,9 @@ app.get("/:fpath(*)", (req, res) => {
 });
 
 const socketServer = new io.Server(server, {
-  path: "socket.io",
+  cors: {
+    origin: "http://localhost:3000",
+  },
 });
 const getDistHash = async () => {
   const resp = await asyncExec(
@@ -85,6 +93,7 @@ socketServer.on("connection", (socket) => {
   });
 });
 
+socketServer.listen(3333);
 server.listen(3000, () => {
   console.info("listening at http://localhost:3000");
 });
