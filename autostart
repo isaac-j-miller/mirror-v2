@@ -1,11 +1,11 @@
 #!/bin/bash
 set -eou pipefail
-
-DISPLAY=:0 xrandr --output HDMI-1 --rotate left
+export DISPLAY=:0
+xrandr --output HDMI-1 --rotate left
 xset -dpms
 xset s off
 xset s noblank
-matchbox-window-manager &
+matchbox-window-manager -use_titlebar no -use_desktop_mode plain -use-cursor no &
 
 cd /home/pi/mirror-v2
 
@@ -18,7 +18,7 @@ aws s3 cp --recursive s3://magic-mirror-v2/ ./dist
 pnpm install --production
 
 pnpm run serve &
-pnpm run lite-ci &
+# pnpm run lite-ci &
 
 ./wait 127.0.0.1 3000
-midori -e Fullscreen -e Navigationbar -a http://localhost:3000 
+xinit midori -e Fullscreen -a http://localhost:3000 
