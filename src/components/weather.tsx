@@ -42,6 +42,12 @@ const DailyForecastContainer = styled.div<{ cols: number }>`
   margin: 0.5em;
 `;
 
+const GridCell = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const WeatherPanel: React.FC<HourlyWeatherInfo> = (props) => {
   const { temperature, time, icon } = props;
   return (
@@ -60,30 +66,9 @@ export const DailyWeatherPanels: React.FC<{ info: DailyWeatherInfo[] }> = ({
   info,
 }) => {
   return (
-    <DailyForecastContainer cols={info.length + 1}>
-      <div
-        style={{
-          gridColumnStart: 1,
-          gridColumnEnd: info.length + 2,
-          gridRow: 1,
-          margin: "auto",
-        }}
-      >
-        <h3
-          style={{
-            margin: "0px",
-          }}
-        >
-          WEEKLY FORECAST
-        </h3>
-      </div>
-      <div style={{ gridRow: 4, gridColumn: 1 }}>HI</div>
-      <div style={{ gridRow: 5, gridColumn: 1 }}>LO</div>
-      <div style={{ gridRow: 6, gridColumn: 1 }}>HUMIDITY</div>
-      <div style={{ gridRow: 7, gridColumn: 1 }}>UVI</div>
-      <div style={{ gridRow: 8, gridColumn: 1 }}>WIND</div>
+    <DailyForecastContainer cols={info.length}>
       {info.map((d, i) => (
-        <DailyWeatherPanel key={`d${i}`} {...d} col={i + 2}></DailyWeatherPanel>
+        <DailyWeatherPanel key={`d${i}`} {...d} col={i + 1}></DailyWeatherPanel>
       ))}
     </DailyForecastContainer>
   );
@@ -91,21 +76,19 @@ export const DailyWeatherPanels: React.FC<{ info: DailyWeatherInfo[] }> = ({
 export const DailyWeatherPanel: React.FC<DailyWeatherInfo & { col: number }> = (
   props
 ) => {
-  const { hi, lo, humidity, uvi, wind, icon, dt } = props;
+  const { hi, lo, icon, dt } = props;
   return (
     <>
-      <div style={{ gridRow: 2, gridColumn: props.col }}>
-        {new Date(dt).toLocaleDateString("en-US", { weekday: "long" })}
-      </div>
-      <WeatherIconCenter
-        src={`icons/${icon}.png`}
-        style={{ gridRow: 3, gridColumn: props.col }}
-      ></WeatherIconCenter>
-      <div style={{ gridRow: 4, gridColumn: props.col }}>{hi}°F</div>
-      <div style={{ gridRow: 5, gridColumn: props.col }}>{lo}°F</div>
-      <div style={{ gridRow: 6, gridColumn: props.col }}>{humidity}%</div>
-      <div style={{ gridRow: 7, gridColumn: props.col }}>{uvi}</div>
-      <div style={{ gridRow: 8, gridColumn: props.col }}>{wind}&nbsp;MPH</div>
+      <GridCell style={{ gridRow: 1, gridColumn: props.col }}>
+        {new Date(dt)
+          .toLocaleDateString("en-US", { weekday: "short" })
+          .toUpperCase()}
+      </GridCell>
+      <GridCell style={{ gridRow: 2, gridColumn: props.col }}>
+        <WeatherIconCenter src={`icons/${icon}.png`}></WeatherIconCenter>
+      </GridCell>
+      <GridCell style={{ gridRow: 3, gridColumn: props.col }}>{hi}°F</GridCell>
+      <GridCell style={{ gridRow: 4, gridColumn: props.col }}>{lo}°F</GridCell>
     </>
   );
 };

@@ -4,11 +4,10 @@ import { getDailyWeatherInfo, WeatherData } from "./api/weather";
 import { generateCompliment } from "./api/compliments";
 import { Compliment } from "./components/compliment";
 import { DailyWeatherPanels, WeatherPanel } from "./components/weather";
-import "./App.css";
 
 const COMPLIMENT_INTERVAL = 300000; // 5 minutes
 const HOURS_TO_SHOW = 12;
-const DAYS_TO_SHOW = 5;
+const DAYS_TO_SHOW = 7;
 
 const RootContainer = styled.div`
   width: 100%;
