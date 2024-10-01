@@ -22,6 +22,7 @@ const ForecastContainer = styled.div`
   right: 0;
   top: 0;
   overflow: hidden;
+  width: 260px;
 `;
 
 const LeftContainer = styled.div`
@@ -32,6 +33,7 @@ const LeftContainer = styled.div`
   left: 0;
   top: 0;
   overflow: hidden;
+  width: calc(100vw - 260px);
 `;
 
 const App: React.FC = () => {

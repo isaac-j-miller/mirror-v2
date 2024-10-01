@@ -7,6 +7,8 @@ const BaseComplimentDiv = styled.div`
   flex-direction: column;
   height: 12em;
   margin-left: 1em;
+  position: relative;
+  top: 0;
 `;
 
 const ComplimentDisplay = styled.div`
