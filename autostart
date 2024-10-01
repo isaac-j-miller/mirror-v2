@@ -18,7 +18,7 @@ aws s3 cp --recursive s3://magic-mirror-v2/ ./dist
 pnpm install --production
 
 pnpm run serve &
-# pnpm run lite-ci &
+pnpm run lite-ci &
 
 ./wait 127.0.0.1 3000
 midori -e Fullscreen -a http://localhost:3000 

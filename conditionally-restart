@@ -1,0 +1,18 @@
+#!/bin/bash
+set -eou pipefail
+
+hash="$(sha1sum pnpm-lock.yaml)$(sha1sum serve.cjs)"
+old_hash="$(cat .tmp/pnpm-lock-hash)$(cat .tmp/serve-cjs-hash)"
+oh_r="${old_hash// /_}"
+h_r="${hash// /_}"
+
+if [ "$oh_r" == "$h_r" ]; then
+    echo "hashes match, no need to restart server"
+    exit 0
+else 
+    echo "hashes changed, restarting server"
+    curl -X POST http://localhost:3000/kill
+    pnpm install
+    pnpm serve &
+    ./wait 127.0.0.1 3000
+fi

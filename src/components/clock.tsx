@@ -10,12 +10,14 @@ const TimeDisplay = styled.div`
 
 export const Clock: React.FC = () => {
   const [time, setTime] = React.useState<string>();
+  const _setTime = () => {
+    const now = new Date();
+    const formatted = strftime("%l:%M %P", now);
+    setTime(formatted);
+  };
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const formatted = strftime("%l:%M %P", now);
-      setTime(formatted);
-    }, 800);
+    _setTime();
+    const interval = setInterval(() => _setTime(), 800);
     return () => {
       clearInterval(interval);
     };

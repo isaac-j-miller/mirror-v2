@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eou pipefail
+mkdir -p .tmp
+
+rm -f .tmp/pnpm-lock-hash
+rm -f .tmp/serve-cjs-hash
+sha1sum pnpm-lock.yaml >> .tmp/pnpm-lock-hash
+sha1sum serve.cjs >> .tmp/serve-cjs-hash
