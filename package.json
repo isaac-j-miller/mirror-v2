@@ -11,7 +11,7 @@
     "prettier": "prettier --write .",
     "prettier-check": "prettier --check .",
     "publish": "rm -rf dist && mkdir dist && pnpm run build && cd dist && aws s3 cp --recursive --acl public-read . s3://magic-mirror-v2",
-    "lite-ci": "npx lite-ci ./lite-ci.config.json",
+    "lite-ci": "./node_modules/.bin/lite-ci ./lite-ci.config.json",
     "check-ts": "tsc --noEmit",
     "serve": "node ./serve.cjs"
   },
