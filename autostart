@@ -5,7 +5,8 @@ xrandr --output HDMI-1 --rotate left
 xset -dpms
 xset s off
 xset s noblank
-matchbox-window-manager -use_titlebar no -use_desktop_mode plain -use-cursor no &
+unclutter &
+matchbox-window-manager -use_titlebar no -use_desktop_mode plain -use_cursor no &
 
 cd /home/pi/mirror-v2
 
@@ -13,6 +14,7 @@ cd /home/pi/mirror-v2
 
 git reset origin --hard
 git pull
+git status
 
 aws s3 cp --recursive s3://magic-mirror-v2/ ./dist
 pnpm install --production
@@ -21,4 +23,8 @@ pnpm run serve &
 pnpm run lite-ci &
 
 ./wait 127.0.0.1 3000
-midori -i 1500 -e Fullscreen -a http://localhost:3000 
+
+sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' /home/pi/.config/chromium/Default/Preferences || true
+sed -i 's/"exit_type":"Crashed"/"exit_type":"Normal"/' /home/pi/.config/chromium/Default/Preferences || true
+
+chromium-browser --kiosk --incognito --allow-insecure-localhost --disable-session-crashed-bubble --disable-infobars --enable-logging=/dev/null 127.0.0.1:3000
